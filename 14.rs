@@ -22,7 +22,8 @@ fn parse_qtys(rules: &HashMap<std::string::String, (u64, std::vec::Vec<Rule>)>, 
 
     if curr_qty > &0 {
         if curr_qty > &need {
-            surplus.insert(curr.to_string(), curr_qty - need);
+            let val = curr_qty - need;
+            surplus.insert(curr.to_string(), val);
             return 0
         } else {
             actual_need = actual_need - curr_qty;
@@ -85,27 +86,20 @@ fn main() {
     println!("{}", parse_qtys(&rules, &"FUEL".to_string(), &mut HashMap::new(), &1));
 
     let mut left = 0;
-    let mut right = 5_000_000;
+    let mut right = 50_000_000;
     let target = 1_000_000_000_000;
-    let mut best = 0;
-    let mut best_i = 0;
 
 
     while left < right {
         let mid = (left + right) / 2;
         let ores = parse_qtys(&rules, &"FUEL".to_string(), &mut HashMap::new(), &(mid));
 
-        if ores > best && ores <= target {
-            best = ores;
-            best_i = mid;
-        }
-
         if ores < target {
-            left = mid + 1; 
+            left = mid; 
         } else {
             right = mid - 1;   
         }
     }
 
-    println!("{} {}", best, best_i);
+    println!("{}", left);
 }
